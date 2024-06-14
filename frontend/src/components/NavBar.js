@@ -27,7 +27,7 @@ export default function NavBar() {
       const ethereum = window.ethereum;
       const provider = new ethers.providers.Web3Provider(ethereum);
 
-      await checkNetwork();
+      await checkNetwork(provider);
 
       // If already on the correct network or after switching
       const accounts = await ethereum.request({
@@ -47,9 +47,10 @@ export default function NavBar() {
       setNativeBalance(ethers.utils.formatEther(nativeBalance)); // Assuming setNativeBalance expects a string
 
       // Fetch the token balance if necessary
-      if (userAddress && userAddress.length > 0) {
-        await getPSTBalance(userAddress);
+      if (address) {
+        await getPSTBalance(address);
       }
+
       // Subscribe to account changes
       ethereum.on("accountsChanged", async (newAccounts) => {
         const newAddress = newAccounts.length > 0 ? newAccounts[0] : "";
@@ -60,23 +61,24 @@ export default function NavBar() {
         if (newAddress) {
           const newNativeBalance = await provider.getBalance(newAddress);
           setNativeBalance(ethers.utils.formatEther(newNativeBalance));
-          if (userAddress && userAddress.length > 0) {
-            await getPSTBalance(userAddress);
+          if (newAddress) {
+            await getPSTBalance(newAddress);
           }
         } else {
           setNativeBalance("0");
           setPSTBalance("0");
         }
       });
-      if (userAddress && userAddress.length > 0) {
-        await getPSTBalance(userAddress);
+
+      if (address) {
+        await getPSTBalance(address);
       }
     } catch (error) {
       console.error("Install metamask OR unable to call", error);
     }
   };
 
-  const checkNetwork = async () => {
+  const checkNetwork = async (provider) => {
     try {
       const network = await provider.getNetwork();
 
@@ -95,8 +97,8 @@ export default function NavBar() {
   return (
     <nav className="py-5 px-12 flex justify-between items-center">
       <Link href="/">
-        <p className="bg-white text-3xl font-bold underline underline-offset-4 decoration-wavy decoration-2 decoration-emerald-500 cursor-pointer">
-          {"MATIC<->AR"}
+        <p className="bg-white text-3xl font-bold underline underline-offset-4 decoration-wavy decoration-2 decoration-purple-500 cursor-pointer">
+          {"MATIC<->PST"}
         </p>
       </Link>
       {userAddress && userAddress.length > 0 ? (
