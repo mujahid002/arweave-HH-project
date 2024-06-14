@@ -1,3 +1,7 @@
 {
-  "name": "hardhat-project"
+  "name": "hardhat-project",
+  "devDependencies": {
+    "hardhat": "^2.22.5",
+    "install": "^0.13.0"
+  }
 }
