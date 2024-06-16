@@ -4,26 +4,26 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { BigNumber, ethers } from "ethers";
 import { useGlobalContext } from "@/context/Store";
-import { provider, signer, vaultContract } from "@/constants/Constants";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { provider, signer, vaultContract } from "@/constants/index";
+// import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 export default function Swap() {
   const {
     nativeBalance,
     PSTBalance,
-    // currencyValueInEuro,
-    // setCurrencyValueInEuro,
+    // currencyValueInMATIC,
+    // setCurrencyValueInMATIC,
   } = useGlobalContext();
 
-  const currencyValueInEuro = 0;
-  const setCurrencyValueInEuro = 0;
+  const currencyValueInMATIC = 0;
+  const setCurrencyValueInMATIC = 0;
 
   const [inputNumber, setInputNumber] = useState(0);
   const [outputNumber, setOutputNumber] = useState(0);
   const [knowledgePerInputCurrency, setKnowledgePerInputCurrency] = useState(0);
   const [outputKnowledgeForUnitCurrency, setOutputKnowledgeForUnitCurrency] =
     useState(0);
-  const [knowledgeValueInEuro, setKnowledgeValueInEuro] = useState(0);
+  const [knowledgeValueInMATIC, setKnowledgeValueInMATIC] = useState(0);
   const [gasPrice, setGasPrice] = useState(0);
   const [selectedFunctionalOption, setSelectedFunctionalOption] = useState(1);
 
@@ -31,17 +31,14 @@ export default function Swap() {
     {
       id: 1,
       label: "MINT",
-      // actionMethod: function to mint knowledge
     },
     {
       id: 2,
       label: "REDEEM",
-      // actionMethod: function to redeem knowledge
     },
     {
       id: 3,
       label: "BURN",
-      // actionMethod: function to burn knowledge
     },
   ];
 
@@ -117,19 +114,19 @@ export default function Swap() {
     fetchAndSetGasPrice();
 
     // Call the function initially
-    // fetchScaledEuroAmount(1);
+    // fetchScaledMATICAmount(1);
 
     // Fetches the output knowledge for 1 unit of currency
     fetchOutputKnowledgeForUnitCurrency();
 
-    // Fetches the currency value in euro
-    fetchCurrencyValueInEuro();
+    // Fetches the currency value in MATIC
+    fetchCurrencyValueInMATIC();
 
     // Set up an interval to call the function every 5 seconds
     const intervalId = setInterval(() => {
       console.log("Calling fetchKnowledgePrice...");
       fetchKnowledgePrice();
-      fetchCurrencyValueInEuro();
+      fetchCurrencyValueInMATIC();
     }, 5000);
 
     // Clear the interval when the component is unmounted
@@ -140,7 +137,7 @@ export default function Swap() {
   }, []);
 
   useEffect(() => {
-    setKnowledgeValueInEuro(fetchKnowledgeValueInEuro(outputNumber) || 0);
+    setKnowledgeValueInMATIC(fetchKnowledgeValueInMATIC(outputNumber) || 0);
   }, [outputNumber]);
 
   async function fetchAndSetGasPrice() {
@@ -172,12 +169,12 @@ export default function Swap() {
 
   const fetchOutputKnowledgeForUnitCurrency = async () => {
     try {
-      const scaledCurrencyEuroAmount =
-        await priceDerivationContract?.getScaledCurrencyEuroAmount(
+      const scaledCurrencyMATICAmount =
+        await priceDerivationContract?.getScaledCurrencyMATICAmount(
           ethers.utils.parseEther("1")
         );
       const tokensToMint = await knowledgeEngineContract?.getTokensToMint(
-        scaledCurrencyEuroAmount
+        scaledCurrencyMATICAmount
       );
       // @ts-ignore
       setOutputKnowledgeForUnitCurrency(ethers.utils.formatEther(tokensToMint));
@@ -186,26 +183,26 @@ export default function Swap() {
     }
   };
 
-  const fetchCurrencyValueInEuro = async () => {
+  const fetchCurrencyValueInMATIC = async () => {
     try {
-      const scaledCurrencyEuroAmount =
-        await priceDerivationContract?.getScaledCurrencyEuroAmount(
+      const scaledCurrencyMATICAmount =
+        await priceDerivationContract?.getScaledCurrencyMATICAmount(
           ethers.utils.parseEther("1")
         );
       console.log(
-        "scaledCurrencyEuroAmount is ...",
-        scaledCurrencyEuroAmount.toString()
+        "scaledCurrencyMATICAmount is ...",
+        scaledCurrencyMATICAmount.toString()
       );
-      setCurrencyValueInEuro(
+      setCurrencyValueInMATIC(
         // @ts-ignore
-        ethers.utils.formatEther(scaledCurrencyEuroAmount).toString()
+        ethers.utils.formatEther(scaledCurrencyMATICAmount).toString()
       );
     } catch (error) {
-      console.error("Error fetching currencyValueInEuro:", error);
+      console.error("Error fetching currencyValueInMATIC:", error);
     }
   };
 
-  const fetchKnowledgeValueInEuro = (_outputNumber) => {
+  const fetchKnowledgeValueInMATIC = (_outputNumber) => {
     try {
       return knowledgePerInputCurrency * _outputNumber;
     } catch (error) {}
@@ -308,7 +305,7 @@ export default function Swap() {
                       />
                       <span className="font-xs px-3 text-gray-400">
                         = €{" "}
-                        {(parseFloat(currencyValueInEuro) || 0) * inputNumber}
+                        {(parseFloat(currencyValueInMATIC) || 0) * inputNumber}
                       </span>
                     </div>
                   </>
@@ -316,9 +313,7 @@ export default function Swap() {
                 {selectedFunctionalOption === functionalOptions[1].id && (
                   <>
                     <div className="min-w-[80px] border-r border-gray-200 p-3 transition-colors duration-200 hover:border-gray-900">
-                      <span className="text-xs uppercase text-black">
-                        KNOWLEDGE
-                      </span>
+                      <span className="text-xs uppercase text-black">PST</span>
                     </div>
                     <div className="flex flex-1 flex-col text-right">
                       <input
@@ -338,9 +333,7 @@ export default function Swap() {
                 {selectedFunctionalOption === functionalOptions[2].id && (
                   <>
                     <div className="min-w-[80px] border-r border-gray-200 p-3 transition-colors duration-200 hover:border-gray-900">
-                      <span className="text-xs uppercase text-black">
-                        KNOWLEDGE
-                      </span>
+                      <span className="text-xs uppercase text-black">PST</span>
                     </div>
                     <div className="flex flex-1 flex-col text-right">
                       <input
@@ -389,7 +382,7 @@ export default function Swap() {
                       />
                       <span className="font-xs px-3 text-gray-400">
                         = €
-                        {(parseFloat(currencyValueInEuro) || 0) * outputNumber}
+                        {(parseFloat(currencyValueInMATIC) || 0) * outputNumber}
                       </span>
                     </div>
                   </>
@@ -397,9 +390,7 @@ export default function Swap() {
                 {selectedFunctionalOption === functionalOptions[0].id && (
                   <>
                     <div className="min-w-[80px] border-r border-gray-200 p-3 transition-colors duration-200 hover:border-gray-900">
-                      <span className="text-xs uppercase text-black">
-                        KNOWLEDGE
-                      </span>
+                      <span className="text-xs uppercase text-black">PST</span>
                     </div>
                     <div className="flex flex-1 flex-col text-right">
                       <input
@@ -412,18 +403,18 @@ export default function Swap() {
                         }
                       />
                       <span className="font-xs px-3 text-gray-400">
-                        = €{knowledgeValueInEuro?.toString()}
+                        = €{knowledgeValueInMATIC?.toString()}
                       </span>
                     </div>
                   </>
                 )}
                 {selectedFunctionalOption === functionalOptions[2].id && (
                   <div className="flex gap-x-2">
-                    <p className="text-green-500 text-xs">
+                    {/* <p className="text-green-500 text-xs">
                       <InfoOutlinedIcon className="mr-1" />
                       The price of KNOWLEDGE is less than its base price.
                       Burning your tokens now will yield you extra rewards.
-                    </p>
+                    </p> */}
                   </div>
                 )}
               </div>
@@ -436,11 +427,11 @@ export default function Swap() {
                 <span className="font-medium text-sm">Rate</span>
                 <span className="font-medium">
                   {selectedFunctionalOption === functionalOptions[1].id
-                    ? `1 KNOWLEDGE ≈ ${knowledgePerInputCurrency} EURO`
+                    ? `1 PST   ≈ ${knowledgePerInputCurrency} MATIC`
                     : selectedFunctionalOption === functionalOptions[0].id
-                    ? `1 EURO ≈ ${(1 / knowledgePerInputCurrency).toFixed(
+                    ? `1 MATIC ≈ ${(1 / knowledgePerInputCurrency).toFixed(
                         4
-                      )} KNOWLEDGE`
+                      )} PST`
                     : ""}
                 </span>
               </div>
