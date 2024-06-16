@@ -24,7 +24,7 @@ contract Polyweave is ERC721Enumerable, Ownable, ReentrancyGuard {
         uint256 indexed depositedAmount
     );
 
-    constructor() ERC721("Polyweave", "POAR") Ownable(msg.sender) {}
+    constructor() ERC721("Polyweave", "POWE") Ownable(msg.sender) {}
 
     function depositAmount(string calldata arAccount) external payable {
         if (msg.value <= 0) revert Polyweave__InvalidAmount();
