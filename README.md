@@ -9,3 +9,4 @@ This repo contains the project submission for Areweave India Hacker House
 3. https://cookbook.arweave.dev/guides/deploying-psts.html#creating-and-deploying-a-pst
 4. https://viewblock.io/arweave (explorer)
 5. Wrap (https://warp.cc/#resources)
+6. https://docs.arweavekit.com/auth/is-installed (for frontend in js)
