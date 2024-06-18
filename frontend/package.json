@@ -10,7 +10,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "arweave-wallet-kit": "^1.0.4",
     "arweavekit": "^1.5.1",
+    "dotenv": "^16.4.5",
     "ethers": "^5.7.2",
     "next": "14.2.4",
     "react": "^18",
