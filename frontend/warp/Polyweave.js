@@ -1,5 +1,6 @@
 export async function handle(state, action) {
   const balances = state.balances;
+  const contributions = state.contributions;
   const totalSupply = state.totalSupply;
   const input = action.input;
   const caller = action.caller;
@@ -94,6 +95,31 @@ export async function handle(state, action) {
     totalSupply -= qty;
     balances[caller] = Math.max(balances[caller], 0);
     totalSupply = Math.max(tokenSupply, 0);
+
+    return { state };
+  }
+  if (input.function === "contribute") {
+    let qty = input.qty;
+
+    if (qty <= 0) {
+      throw new ContractError("Invalid burn amount");
+    }
+
+    if (!Number.isInteger(qty)) {
+      throw new ContractError('Invalid value for "qty". Must be an integer');
+    }
+
+    if (balances[caller] < qty) {
+      throw new ContractError(
+        `Caller balance not high enough to contribute ${qty} token(s)!`
+      );
+    }
+
+    balances[caller] -= qty;
+    totalSupply -= qty;
+    balances[caller] = Math.max(balances[caller], 0);
+    totalSupply = Math.max(tokenSupply, 0);
+    contributions[caller] += qty;
 
     return { state };
   }
