@@ -23,31 +23,31 @@ export default function NavBar() {
     setArUserAddress,
   } = useGlobalContext();
 
-  const arConnectWallet = async () => {
-    try {
-      // const address = await ArConnect.getActiveAddress();
-      const response = await ArConnect.isInstalled();
+  // const arConnectWallet = async () => {
+  //   try {
+  //     // const address = await ArConnect.getActiveAddress();
+  //     const response = await ArConnect.isInstalled();
 
-      console.log("ArConnect Wallet installed:", response);
-      if (!response) {
-        alert("Please install Arweave Wallet!");
-      }
+  //     console.log("ArConnect Wallet installed:", response);
+  //     if (!response) {
+  //       alert("Please install Arweave Wallet!");
+  //     }
 
-      // connect to the extension
-      // await window.arweaveWallet.connect(
-      //   // request permissions to read the active address
-      //   ["ACCESS_ADDRESS"]
-      // );
-      await connect(["ACCESS_ADDRESS"]);
-      const address = useActiveAddress();
-      // await ArConnect.connect(["ACCESS_ADDRESS"]);
-      // const address = await ArConnect.getActiveAddress();
-      setArUserAddress(address);
-    } catch (e) {
-      console.error("Error:", e.message || e);
-      alert("Please install the Arweave Wallet.");
-    }
-  };
+  //     // connect to the extension
+  //     // await window.arweaveWallet.connect(
+  //     //   // request permissions to read the active address
+  //     //   ["ACCESS_ADDRESS"]
+  //     // );
+  //     await connect(["ACCESS_ADDRESS"]);
+  //     const address = useActiveAddress();
+  //     // await ArConnect.connect(["ACCESS_ADDRESS"]);
+  //     // const address = await ArConnect.getActiveAddress();
+  //     setArUserAddress(address);
+  //   } catch (e) {
+  //     console.error("Error:", e.message || e);
+  //     alert("Please install the Arweave Wallet.");
+  //   }
+  // };
 
   const ConnectWallet = async () => {
     try {
