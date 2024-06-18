@@ -1,10 +1,11 @@
 export async function handle(state, action) {
   const balances = state.balances;
+  const contributors = state.contributors;
   const contributions = state.contributions;
   const totalSupply = state.totalSupply;
   const input = action.input;
   const caller = action.caller;
-  let canEvolve = true; // Assume true
+  let canEvolve = true;
 
   if (state.canEvolve) {
     canEvolve = state.canEvolve;
@@ -55,6 +56,8 @@ export async function handle(state, action) {
 
   if (input.function === "mint") {
     let qty = input.qty;
+    let evmAddress = input.evmAddress;
+    let arAddress = input.arAddress;
 
     if (qty <= 0) {
       throw new ContractError("Invalid token mint");
@@ -72,10 +75,12 @@ export async function handle(state, action) {
 
     balances[caller] ? (balances[caller] += qty) : (balances[caller] = qty);
     totalSupply += qty;
+    contributors[arAddress][evmAddress] += qty;
     return { state };
   }
   if (input.function === "burn") {
     let qty = input.qty;
+    let evmAddress = input.evmAddress;
 
     if (qty <= 0) {
       throw new ContractError("Invalid burn amount");
@@ -85,7 +90,7 @@ export async function handle(state, action) {
       throw new ContractError('Invalid value for "qty". Must be an integer');
     }
 
-    if (balances[caller] < qty) {
+    if (balances[caller] < qty || contributors[caller][evmAddress] < qty) {
       throw new ContractError(
         `Caller balance not high enough to burn ${qty} token(s)!`
       );
@@ -95,6 +100,7 @@ export async function handle(state, action) {
     totalSupply -= qty;
     balances[caller] = Math.max(balances[caller], 0);
     totalSupply = Math.max(tokenSupply, 0);
+    contributors[caller][evmAddress] -= qty;
 
     return { state };
   }
@@ -109,7 +115,7 @@ export async function handle(state, action) {
       throw new ContractError('Invalid value for "qty". Must be an integer');
     }
 
-    if (balances[caller] < qty) {
+    if (balances[caller] < qty || contributors[caller][evmAddress] < qty) {
       throw new ContractError(
         `Caller balance not high enough to contribute ${qty} token(s)!`
       );
@@ -120,6 +126,7 @@ export async function handle(state, action) {
     balances[caller] = Math.max(balances[caller], 0);
     totalSupply = Math.max(tokenSupply, 0);
     contributions[caller] += qty;
+    contributors[caller][evmAddress] -= qty;
 
     return { state };
   }

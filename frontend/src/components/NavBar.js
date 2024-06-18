@@ -144,7 +144,7 @@ export default function NavBar() {
           </button>
         )} */}
         <ConnectButton
-          accent="rgb(208, 56, 224)"
+          accent="rgb(173, 82, 242)"
           profileModal={true}
           showBalance={true}
           showProfilePicture={true}
@@ -156,10 +156,9 @@ export default function NavBar() {
             <div className="flex gap-4 items-center justify-center">
               <p className="text-purple-500">
                 {nativeBalance
-                  ? "MATIC: " +
-                    parseFloat(nativeBalance).toFixed(2) +
-                    `(~$${(maticPrice * parseFloat(nativeBalance)).toFixed(2)})`
-                  : "Loading..."}
+                  ? "MATIC: " + parseFloat(nativeBalance).toFixed(2)
+                  : // + `(~$${(maticPrice * parseFloat(nativeBalance)).toFixed(2)})`
+                    "Loading..."}
               </p>
             </div>
           </div>
