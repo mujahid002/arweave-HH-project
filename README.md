@@ -7,7 +7,7 @@ This repo contains the project submission for Areweave India Hacker House
 
 ~Backend: Solidity(EVM), Warp SDK, PST Concept.
 
-### GitHub Link : https://github.com/mujahid002/arweave-HH-project/Q
+### GitHub Link : https://github.com/mujahid002/arweave-HH-project/
 ## Project Goal : 
 Main Goal is to Integratge any EVM chains with Arweave. EVM ~ AR, Anything can possible with proper planning! 
 ## Project Info : 
